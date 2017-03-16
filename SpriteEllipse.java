@@ -8,6 +8,7 @@ public class SpriteEllipse extends Sprite {
     private Ellipse2D shape = null;
     private int width, height;
     private int heightSinceClick;
+    private static final int minHeight = 30, maxHeight = 200;
 
     public SpriteEllipse(int width, int height, Sprite parent) {
         super(parent);
@@ -37,9 +38,13 @@ public class SpriteEllipse extends Sprite {
 
     @Override
     protected void scaleShapeY(double scale) {
-        this.shape = new Ellipse2D.Double(0, 0, width, (int)(heightSinceClick * scale));
-        this.scaleChildren((int)(heightSinceClick * scale) - height);
-        height = (int)(heightSinceClick * scale);
+        int newHeight = (int)(heightSinceClick * scale);
+        if (newHeight >= minHeight && newHeight <= maxHeight) {
+            this.shape = new Ellipse2D.Double(0, 0, width, newHeight);
+            this.translateChildren(newHeight - height);
+            height = (int)(heightSinceClick * scale);
+            this.scaleSlave(scale);
+        }
     }
 
     @Override

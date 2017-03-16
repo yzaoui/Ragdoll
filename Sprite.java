@@ -100,11 +100,17 @@ public abstract class Sprite {
 
     protected abstract void startScale();
 
-    protected void scaleChildren(int dy) {
+    protected void translateChildren(int dy) {
         for (Sprite child : children) {
             child.transform.rotate(-child.pivotAngle - child.initialAbsoluteAngle);
             child.transform.translate(0, dy);
             child.transform.rotate(child.pivotAngle + child.initialAbsoluteAngle);
+        }
+    }
+
+    protected void scaleSlave(double scale) {
+        if (this.hasSlave()) {
+            this.slave.scaleShapeY(scale);
         }
     }
 
@@ -121,9 +127,6 @@ public abstract class Sprite {
                 if (canScale) {
                     double scale = (double)transformedY / lastScalePointY;
                     this.scaleShapeY(scale);
-                    if (this.hasSlave()) {
-                        this.slave.scaleShapeY(scale);
-                    }
                 }
             } else if (this.canTranslate) {
                 double translateX = localPNonRotated.getX() - lastPoint.getX();
