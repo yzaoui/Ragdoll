@@ -16,6 +16,7 @@ public class Main {
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
 
+        /* Set up file menu */
         JMenu file = new JMenu("File");
         menuBar.add(file);
 
@@ -30,11 +31,29 @@ public class Main {
         quit.addActionListener((ActionEvent e) -> System.exit(0));
         file.add(quit);
 
+        /* Set up ragdoll menu */
+        JMenu ragdoll = new JMenu("Ragdoll");
+        menuBar.add(ragdoll);
+
+        //Person
+        JRadioButtonMenuItem person = new JRadioButtonMenuItem("Person", true);
+        ragdoll.add(person);
+
+        //Tree
+        JRadioButtonMenuItem tree = new JRadioButtonMenuItem("Tree");
+        ragdoll.add(tree);
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(person);
+        group.add(tree);
+
         /* Set up canvas */
         Canvas canvas = new Canvas();
         frame.add(canvas);
 
         reset.addActionListener((ActionEvent e) -> canvas.reset());
+        person.addActionListener((ActionEvent e) -> canvas.setRagdoll(Ragdoll.Type.PERSON));
+        tree.addActionListener((ActionEvent e) -> canvas.setRagdoll(Ragdoll.Type.TREE));
 
         frame.repaint();
         frame.revalidate();

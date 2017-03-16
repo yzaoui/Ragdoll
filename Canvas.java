@@ -7,6 +7,7 @@ import java.awt.event.MouseMotionAdapter;
 
 public class Canvas extends JPanel {
     private Ragdoll root;
+    private Ragdoll.Type currentType;
     private Sprite selectedSprite = null;
 
     public Canvas() {
@@ -33,6 +34,7 @@ public class Canvas extends JPanel {
                 }
             }
         });
+        this.currentType = Ragdoll.Type.PERSON;
 
         this.reset();
         this.repaint();
@@ -40,7 +42,14 @@ public class Canvas extends JPanel {
     }
 
     public void reset() {
-        root = new Person();
+        switch (currentType) {
+            case PERSON:
+                root = new Person();
+                break;
+            case TREE:
+                root = new Tree();
+                break;
+        }
 
         Timer timer = new Timer(20, (ActionEvent e) -> Canvas.this.repaint());
         timer.setRepeats(false);
@@ -54,5 +63,12 @@ public class Canvas extends JPanel {
         g.setColor(Color.black);
 
         root.draw((Graphics2D)g);
+    }
+
+    public void setRagdoll(Ragdoll.Type type) {
+        if (this.currentType != type) {
+            this.currentType = type;
+            this.reset();
+        }
     }
 }
