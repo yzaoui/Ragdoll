@@ -39,6 +39,8 @@ public class SpriteRectangle extends Sprite {
 
     @Override
     protected void drawSprite(Graphics2D g) {
+        g.setColor(this.fillColor);
+        g.fill(shape);
         g.setColor(Color.black);
         g.draw(shape);
     }

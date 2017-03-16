@@ -10,6 +10,7 @@ public abstract class Sprite {
     private Vector<Sprite> children = new Vector<>();
     private AffineTransform transform = new AffineTransform();
     private Point2D lastPoint = null;
+    protected Color fillColor = Color.white;
 
     private double initialAbsoluteAngle = 0;
 
@@ -210,6 +211,10 @@ public abstract class Sprite {
         for (Sprite child : children) {
             child.draw(g);
         }
+    }
+
+    public void setColor(Color color) {
+        this.fillColor = color;
     }
 
     protected abstract void drawSprite(Graphics2D g);
