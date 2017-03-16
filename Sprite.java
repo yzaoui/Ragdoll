@@ -142,7 +142,9 @@ public abstract class Sprite {
 
     public Sprite getSelectedSprite(Point p) {
         //Check children first
-        for (Sprite child : children) {
+        for (int i = children.size() - 1; i >= 0; i--) {
+            Sprite child = children.get(i);
+
             Sprite selected = child.getSelectedSprite(p);
             if (selected != null) {
                 return selected;
