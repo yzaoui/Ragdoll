@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -34,12 +35,20 @@ public class Canvas extends JPanel {
             }
         });
 
-        this.initCanvas();
+        this.reset();
         this.repaint();
         this.revalidate();
     }
 
-    private void initCanvas() {
+    public void reset() {
+        this.initDoll();
+
+        Timer timer = new Timer(20, (ActionEvent e) -> Canvas.this.repaint());
+        timer.setRepeats(false);
+        timer.start();
+    }
+
+    private void initDoll() {
         int torsoW = 60, torsoH = 130;
         Sprite torso = new SpriteRectangle(torsoW, torsoH, null);
         torso.transform(AffineTransform.getTranslateInstance(370, 200));
