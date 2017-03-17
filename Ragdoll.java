@@ -4,7 +4,7 @@ public abstract class Ragdoll {
     protected Sprite root;
 
     public enum Type {
-        PERSON, TREE
+        PERSON, TREE, DOG
     }
 
     public Sprite getSelectedSprite(Point p) {

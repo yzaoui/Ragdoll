@@ -43,9 +43,14 @@ public class Main {
         JRadioButtonMenuItem tree = new JRadioButtonMenuItem("Tree");
         ragdoll.add(tree);
 
+        //Dog
+        JRadioButtonMenuItem dog = new JRadioButtonMenuItem("Dog");
+        ragdoll.add(dog);
+
         ButtonGroup group = new ButtonGroup();
         group.add(person);
         group.add(tree);
+        group.add(dog);
 
         /* Set up canvas */
         Canvas canvas = new Canvas();
@@ -54,6 +59,7 @@ public class Main {
         reset.addActionListener((ActionEvent e) -> canvas.reset());
         person.addActionListener((ActionEvent e) -> canvas.setRagdoll(Ragdoll.Type.PERSON));
         tree.addActionListener((ActionEvent e) -> canvas.setRagdoll(Ragdoll.Type.TREE));
+        dog.addActionListener((ActionEvent e) -> canvas.setRagdoll(Ragdoll.Type.DOG));
 
         frame.repaint();
         frame.revalidate();

@@ -21,6 +21,7 @@ public abstract class Sprite {
     private boolean canScale = false;
         private int lastScalePointY;
     private boolean canTranslate = false;
+    private boolean canSelect = true;
 
     private AffineTransform selectedInverseTransform = null;
 
@@ -152,7 +153,7 @@ public abstract class Sprite {
         }
 
         //Check self
-        if (this.containsPoint(p)) {
+        if (this.containsPoint(p) && this.canSelect) {
             selectedInverseTransform = new AffineTransform(this.getFullTransform());
 
             try {
@@ -217,6 +218,10 @@ public abstract class Sprite {
 
     public void setColor(Color color) {
         this.fillColor = color;
+    }
+
+    public void setSelectable(boolean bool) {
+        this.canSelect = bool;
     }
 
     protected abstract void drawSprite(Graphics2D g);

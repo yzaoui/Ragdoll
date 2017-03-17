@@ -16,6 +16,7 @@ public class SpriteEllipse extends Sprite {
         this.width = width;
         this.height = height;
     }
+
     @Override
     public boolean containsPoint(Point2D p) {
         AffineTransform fullTransform = this.getFullTransform();

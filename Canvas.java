@@ -49,6 +49,9 @@ public class Canvas extends JPanel {
             case TREE:
                 root = new Tree();
                 break;
+            case DOG:
+                root = new Dog();
+                break;
         }
 
         Timer timer = new Timer(20, (ActionEvent e) -> Canvas.this.repaint());
