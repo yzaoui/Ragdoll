@@ -203,7 +203,9 @@ public abstract class Sprite {
     }
 
     public void draw(Graphics2D g) {
-        AffineTransform oldTransform = g.getTransform();
+	g.setRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
+        
+	AffineTransform oldTransform = g.getTransform();
 
         g.setTransform(this.getFullTransform());
 
