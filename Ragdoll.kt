@@ -1,17 +1,18 @@
-import java.awt.*
+import java.awt.Graphics2D
+import java.awt.Point
 
 abstract class Ragdoll {
-    protected var root: Sprite? = null
+    abstract protected val root: Sprite
 
     enum class Type {
         PERSON, TREE, DOG
     }
 
     fun getSelectedSprite(p: Point): Sprite? {
-        return this.root!!.getSelectedSprite(p)
+        return root.getSelectedSprite(p)
     }
 
     fun draw(g: Graphics2D) {
-        this.root!!.draw(g)
+        this.root.draw(g)
     }
 }

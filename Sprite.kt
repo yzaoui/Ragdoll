@@ -39,7 +39,7 @@ abstract class Sprite(parent: Sprite?) {
             return returnTransform
         }
 
-    val localTransform: AffineTransform
+    private val localTransform: AffineTransform
         get() = AffineTransform(this.transform)
 
     init {
@@ -49,13 +49,9 @@ abstract class Sprite(parent: Sprite?) {
         }
     }
 
-    fun addChild(child: Sprite) {
+    private fun addChild(child: Sprite) {
         this.children.add(child)
         child.parent = this
-    }
-
-    private fun hasSlave(): Boolean {
-        return this.slave != null
     }
 
     fun setSlave(slave: Sprite) {
@@ -63,16 +59,16 @@ abstract class Sprite(parent: Sprite?) {
     }
 
     fun setPivotAround(x: Int, y: Int, maxAngle: Double) {
-        this.canPivot = true
-        this.pivotX = x
-        this.pivotY = y
-        this.pivotMaxAngle = Math.toRadians(maxAngle)
-        this.pivotAngle = 0.0
+        canPivot = true
+        pivotX = x
+        pivotY = y
+        pivotMaxAngle = Math.toRadians(maxAngle)
+        pivotAngle = 0.0
     }
 
     fun setPivotAround(x: Int, y: Int, maxAngle: Double, initialAngleWithinRange: Double) {
         setPivotAround(x, y, maxAngle)
-        this.pivot(Math.toRadians(initialAngleWithinRange))
+        pivot(Math.toRadians(initialAngleWithinRange))
     }
 
     fun setPivotAround(x: Int, y: Int, maxAngle: Double, initialAngleWithinRange: Double, initialAbsoluteAngle: Double) {
@@ -82,28 +78,26 @@ abstract class Sprite(parent: Sprite?) {
     }
 
     fun setCanScale(b: Boolean) {
-        this.canScale = b
+        canScale = b
     }
 
     fun setCanTranslate(b: Boolean) {
-        this.canTranslate = b
+        canTranslate = b
     }
 
     abstract fun containsPoint(p: Point2D): Boolean
 
-    fun pivot(newAngle: Double) {
-        if (Math.abs(newAngle + pivotAngle) <= this.pivotMaxAngle) {
-            if (selectedInverseTransform != null) {
-                selectedInverseTransform!!.rotate(newAngle, pivotX.toDouble(), pivotY.toDouble())
+    private fun pivot(newAngle: Double) {
+        if (Math.abs(newAngle + pivotAngle) <= pivotMaxAngle) {
+            selectedInverseTransform?.rotate(newAngle, pivotX.toDouble(), pivotY.toDouble())
+
+            transform.rotate(newAngle, pivotX.toDouble(), pivotY.toDouble())
+
+            if (pivotAngle + newAngle >= Math.PI || pivotAngle + newAngle <= -Math.PI) {
+                pivotAngle = 0.0
             }
 
-            this.transform.rotate(newAngle, pivotX.toDouble(), pivotY.toDouble())
-
-            if (this.pivotAngle + newAngle >= Math.PI || this.pivotAngle + newAngle <= -Math.PI) {
-                this.pivotAngle = 0.0
-            }
-
-            this.pivotAngle += newAngle
+            pivotAngle += newAngle
         }
     }
 
@@ -113,42 +107,38 @@ abstract class Sprite(parent: Sprite?) {
 
     protected fun translateChildren(dy: Int) {
         for (child in children) {
-            child.transform.rotate(-child.pivotAngle - child.initialAbsoluteAngle)
-            child.transform.translate(0.0, dy.toDouble())
-            child.transform.rotate(child.pivotAngle + child.initialAbsoluteAngle)
+            child.apply {
+                transform.rotate(-pivotAngle - initialAbsoluteAngle)
+                transform.translate(0.0, dy.toDouble())
+                transform.rotate(pivotAngle + initialAbsoluteAngle)
+            }
         }
     }
 
     protected fun scaleSlave(scale: Double) {
-        if (this.hasSlave()) {
-            this.slave!!.scaleShapeY(scale)
-        }
+        slave?.scaleShapeY(scale)
     }
 
     fun drag(p: Point2D) {
-        try {
-            val localPNonRotated = this.selectedInverseTransform!!.inverseTransform(p, null)
+        val localPNonRotated = selectedInverseTransform!!.inverseTransform(p, null)
 
-            if (this.canPivot) {
-                val transformedX = pivotX - localPNonRotated.x.toInt()
-                val transformedY = pivotY - localPNonRotated.y.toInt()
+        if (canPivot) {
+            val transformedX = pivotX - localPNonRotated.x.toInt()
+            val transformedY = pivotY - localPNonRotated.y.toInt()
 
-                val newAngle = -Math.atan2(transformedX.toDouble(), transformedY.toDouble())
-                this.pivot(newAngle)
-                if (canScale) {
-                    val scale = transformedY.toDouble() / lastScalePointY
-                    this.scaleShapeY(scale)
-                }
-            } else if (this.canTranslate) {
-                val translateX = localPNonRotated.x - lastPoint!!.x
-                val translateY = localPNonRotated.y - lastPoint!!.y
-                this.transform.translate(translateX, translateY)
-                lastPoint!!.setLocation(localPNonRotated)
+            val newAngle = -Math.atan2(transformedX.toDouble(), transformedY.toDouble())
+            this.pivot(newAngle)
+            if (canScale) {
+                val scale = transformedY.toDouble() / lastScalePointY
+                this.scaleShapeY(scale)
             }
-        } catch (e: NoninvertibleTransformException) {
-            e.printStackTrace()
+        } else if (canTranslate) {
+            val lastPoint = lastPoint!!
+            val translateX = localPNonRotated.x - lastPoint.x
+            val translateY = localPNonRotated.y - lastPoint.y
+            this.transform.translate(translateX, translateY)
+            lastPoint.setLocation(localPNonRotated)
         }
-
     }
 
     fun getSelectedSprite(p: Point): Sprite? {
@@ -163,8 +153,8 @@ abstract class Sprite(parent: Sprite?) {
         }
 
         //Check self
-        if (this.containsPoint(p) && this.canSelect) {
-            selectedInverseTransform = AffineTransform(this.fullTransform)
+        if (containsPoint(p) && canSelect) {
+            selectedInverseTransform = AffineTransform(fullTransform)
 
             try {
                 val localP = selectedInverseTransform!!.inverseTransform(p, null)
@@ -174,9 +164,7 @@ abstract class Sprite(parent: Sprite?) {
                     if (this.canScale) {
                         lastScalePointY = localP.y.toInt() - pivotY
                         this.startScale()
-                        if (this.hasSlave()) {
-                            this.slave!!.startScale()
-                        }
+                        slave?.startScale()
                     }
                 } else if (this.canTranslate) {
                     lastPoint = localP
@@ -193,7 +181,7 @@ abstract class Sprite(parent: Sprite?) {
     }
 
     fun transform(t: AffineTransform) {
-        this.transform.concatenate(t)
+        transform.concatenate(t)
     }
 
     fun draw(g: Graphics2D) {
@@ -201,7 +189,7 @@ abstract class Sprite(parent: Sprite?) {
 
         val oldTransform = g.transform
 
-        g.transform = this.fullTransform
+        g.transform = fullTransform
 
         this.drawSprite(g)
 
@@ -213,11 +201,11 @@ abstract class Sprite(parent: Sprite?) {
     }
 
     fun setColor(color: Color) {
-        this.fillColor = color
+        fillColor = color
     }
 
     fun setSelectable(bool: Boolean) {
-        this.canSelect = bool
+        canSelect = bool
     }
 
     protected abstract fun drawSprite(g: Graphics2D)
