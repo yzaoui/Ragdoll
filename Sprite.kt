@@ -125,7 +125,7 @@ abstract class Sprite(parent: Sprite?) {
         }
     }
 
-    protected fun drag(p: Point2D) {
+    fun drag(p: Point2D) {
         try {
             val localPNonRotated = this.selectedInverseTransform!!.inverseTransform(p, null)
 

@@ -4,8 +4,8 @@ import java.awt.geom.NoninvertibleTransformException
 import java.awt.geom.Point2D
 import java.awt.geom.RoundRectangle2D
 
-class SpriteRectangle(width: Int, height: Int, parent: Sprite) : Sprite(parent) {
-    private val shape: RoundRectangle2D? = null
+class SpriteRectangle(width: Int, height: Int, parent: Sprite?) : Sprite(parent) {
+    private var shape: RoundRectangle2D? = null
 
     init {
         this.shape = RoundRectangle2D.Double(0.0, 0.0, width.toDouble(), height.toDouble(), 15.0, 15.0)

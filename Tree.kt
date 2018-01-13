@@ -9,7 +9,7 @@ class Tree : Ragdoll() {
 
         val trunkW = 60
         val trunkH = 40
-        val trunk = SpriteRectangle(trunkW, trunkH, null!!)
+        val trunk = SpriteRectangle(trunkW, trunkH, null)
         trunk.transform(AffineTransform.getTranslateInstance(370.0, 480.0))
         trunk.setCanTranslate(true)
         trunk.setColor(brown)
