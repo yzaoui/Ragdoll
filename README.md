@@ -1,5 +1,9 @@
+# Ragdoll
+
 An application for manipulating different types of ragdolls using direct manipulation.
 Originally written in Java for CS349's Winter 2017 offering, and later converted to Kotlin.
+
+![Sample image of the program](ragdoll-example.PNG)
 
 Features:
 
